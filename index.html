@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zona Playbox — Votação de Jogos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0d0d0f;
+  --surface: #16161a;
+  --surface2: #1e1e24;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0f0f2;
+  --muted: #7a7a8a;
+  --dim: #3a3a48;
+  --purple: #8b5cf6;
+  --purple-light: #a78bfa;
+  --purple-dim: rgba(139,92,246,0.12);
+  --purple-glow: rgba(139,92,246,0.25);
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45,212,191,0.12);
+  --teal-glow: rgba(45,212,191,0.2);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.1);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.1);
+  --red: #f87171;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* background grid pattern */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap {
+  position:relative;
+  z-index:1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+}
+
+/* HEADER */
+header {
+  padding: 36px 0 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.header-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand-icon {
+  width:44px; height:44px;
+  background: var(--purple-dim);
+  border: 1px solid var(--purple);
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px;
+}
+.brand-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: var(--text);
+  line-height:1;
+}
+.brand-sub {
+  font-size:12px;
+  color: var(--muted);
+  letter-spacing:0.5px;
+  margin-top:2px;
+}
+.header-stats {
+  display:flex;
+  gap:8px;
+}
+.hstat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius:8px;
+  padding:8px 14px;
+  text-align:center;
+}
+.hstat-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  line-height:1;
+  color:var(--purple-light);
+}
+.hstat-lbl {
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+/* NICK BAR */
+.nick-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius:12px;
+  padding:16px 20px;
+  margin-bottom:24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.nick-label {
+  font-size:13px;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.nick-form {
+  display:flex;
+  gap:8px;
+  flex:1;
+  min-width:200px;
+}
+input[type=text] {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius:8px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size:14px;
+  padding: 8px 14px;
+  outline:none;
+  flex:1;
+  transition: border-color .2s;
+}
+input[type=text]:focus { border-color: var(--purple); }
+input[type=text]::placeholder { color: var(--muted); }
+.btn {
+  background: var(--purple);
+  color: #fff;
+  border:none;
+  border-radius:8px;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  padding:8px 18px;
+  cursor:pointer;
+  transition:opacity .15s, transform .1s;
+  white-space:nowrap;
+}
+.btn:hover { opacity:.88; }
+.btn:active { transform:scale(.97); }
+.btn-ghost {
+  background:transparent;
+  border:1px solid var(--border2);
+  color:var(--muted);
+  font-size:12px;
+  padding:6px 12px;
+}
+.btn-ghost:hover { color:var(--text); border-color:var(--border2); }
+.nick-active {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.nick-avatar {
+  width:32px; height:32px;
+  border-radius:50%;
+  background: var(--purple-dim);
+  border:1px solid var(--purple);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px;
+  font-weight:600;
+  color:var(--purple-light);
+}
+.nick-name-display {
+  font-weight:500;
+  color:var(--text);
+}
+
+/* WEEK NAVIGATOR */
+.week-nav {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+}
+.nav-btn {
+  width:40px; height:40px;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  color:var(--text);
+  font-size:18px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .15s, border-color .15s;
+  flex-shrink:0;
+}
+.nav-btn:hover { background:var(--surface2); border-color:var(--purple); }
+.nav-btn:disabled { opacity:.3; cursor:default; }
+.week-info {
+  flex:1;
+}
+.week-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  letter-spacing:2px;
+  line-height:1;
+  color:var(--text);
+}
+.week-dates {
+  font-size:13px;
+  color:var(--muted);
+  margin-top:2px;
+}
+.week-dots {
+  display:flex;
+  gap:4px;
+  flex-wrap:wrap;
+  max-width:200px;
+}
+.dot {
+  width:8px; height:8px;
+  border-radius:50%;
+  background: var(--dim);
+  cursor:pointer;
+  transition:background .15s;
+}
+.dot.active { background:var(--purple); }
+.dot.has-votes { background:var(--teal); }
+
+/* VOTE CARDS */
+.vote-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:16px;
+}
+@media(max-width:560px){
+  .vote-grid { grid-template-columns:1fr; }
+}
+.vote-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  cursor:pointer;
+  transition:border-color .2s, background .2s, transform .1s;
+  position:relative;
+  overflow:hidden;
+}
+.vote-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:3px;
+  opacity:0;
+  transition:opacity .2s;
+}
+.vote-card.main-card::before { background: var(--purple); }
+.vote-card.alt-card::before { background: var(--teal); }
+.vote-card:hover:not(.no-hover) { transform:translateY(-2px); }
+.vote-card.main-card:hover:not(.no-hover) {
+  border-color:var(--purple);
+  background:var(--purple-dim);
+}
+.vote-card.alt-card:hover:not(.no-hover) {
+  border-color:var(--teal);
+  background:var(--teal-dim);
+}
+.vote-card.selected-main {
+  border-color:var(--purple) !important;
+  background:var(--purple-dim) !important;
+}
+.vote-card.selected-main::before { opacity:1; }
+.vote-card.selected-alt {
+  border-color:var(--teal) !important;
+  background:var(--teal-dim) !important;
+}
+.vote-card.selected-alt::before { opacity:1; }
+.vote-card.no-hover { cursor:default; }
+
+.card-role {
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  padding:3px 10px;
+  border-radius:99px;
+  margin-bottom:14px;
+}
+.role-main { background:var(--purple-dim); color:var(--purple-light); border:1px solid rgba(139,92,246,.3); }
+.role-alt { background:var(--teal-dim); color:var(--teal); border:1px solid rgba(45,212,191,.3); }
+
+.card-game-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;
+  letter-spacing:1px;
+  line-height:1.1;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.card-tags {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.tag {
+  font-size:11px;
+  font-weight:500;
+  padding:3px 9px;
+  border-radius:99px;
+  border:1px solid;
+}
+.tag-free { color:#4ade80; border-color:rgba(74,222,128,.35); background:rgba(74,222,128,.08); }
+.tag-paid { color:var(--amber); border-color:rgba(245,158,11,.35); background:var(--amber-dim); }
+.tag-expensive { color:var(--red); border-color:rgba(248,113,113,.35); background:rgba(248,113,113,.08); }
+.tag-cross { color:#60a5fa; border-color:rgba(96,165,250,.35); background:rgba(96,165,250,.08); }
+.tag-cat { color:var(--muted); border-color:var(--border2); background:transparent; }
+
+.card-desc {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.55;
+  margin-bottom:16px;
+}
+
+/* BAR */
+.bar-section { margin-bottom:16px; }
+.bar-meta {
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:5px;
+}
+.bar-meta strong { color:var(--text); }
+.bar-track {
+  height:5px;
+  background:var(--surface2);
+  border-radius:99px;
+  overflow:hidden;
+}
+.bar-fill {
+  height:100%;
+  border-radius:99px;
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.bar-fill-main { background:var(--purple); }
+.bar-fill-alt { background:var(--teal); }
+
+/* VOTE BUTTON */
+.vote-action {
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:opacity .15s, transform .1s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:none;
+  margin-bottom:14px;
+}
+.vote-action:active { transform:scale(.97); }
+.vote-action:hover { opacity:.85; }
+.vote-action.va-main { background:var(--purple); color:#fff; }
+.vote-action.va-alt { background:var(--teal); color:#0d2e2a; }
+.vote-action.va-done-main {
+  background:var(--purple-dim);
+  color:var(--purple-light);
+  border:1px solid rgba(139,92,246,.4);
+  cursor:default;
+}
+.vote-action.va-done-alt {
+  background:var(--teal-dim);
+  color:var(--teal);
+  border:1px solid rgba(45,212,191,.4);
+  cursor:default;
+}
+.vote-action.va-done-main:hover,
+.vote-action.va-done-alt:hover { opacity:1; }
+
+/* VOTERS */
+.voters-label {
+  font-size:11px;
+  color:var(--dim);
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:6px;
+}
+.voter-chips {
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  min-height:20px;
+}
+.chip {
+  font-size:11px;
+  padding:2px 9px;
+  border-radius:99px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  color:var(--muted);
+}
+.chip-me {
+  background:var(--purple-dim);
+  border-color:rgba(139,92,246,.4);
+  color:var(--purple-light);
+}
+.chip-me-teal {
+  background:var(--teal-dim);
+  border-color:rgba(45,212,191,.4);
+  color:var(--teal);
+}
+.no-votes-txt {
+  font-size:11px;
+  color:var(--dim);
+  font-style:italic;
+}
+
+/* RESULT BANNER */
+.result-banner {
+  border-radius:12px;
+  padding:14px 18px;
+  text-align:center;
+  font-size:14px;
+  font-weight:500;
+  margin-bottom:20px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.result-banner.visible { display:flex; }
+.rb-main { background:var(--purple-dim); color:var(--purple-light); border:1px solid rgba(139,92,246,.3); }
+.rb-alt { background:var(--teal-dim); color:var(--teal); border:1px solid rgba(45,212,191,.3); }
+.rb-tie { background:var(--amber-dim); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
+
+/* SCHEDULE */
+.schedule-bar {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.schedule-bar-label {
+  font-size:12px;
+  color:var(--muted);
+  margin-right:4px;
+}
+.day-pill {
+  font-size:12px;
+  font-weight:500;
+  padding:4px 12px;
+  border-radius:99px;
+  border:1px solid;
+}
+.dp-fri { color:#a78bfa; border-color:rgba(167,139,250,.4); background:rgba(167,139,250,.08); }
+.dp-sat { color:#2dd4bf; border-color:rgba(45,212,191,.4); background:rgba(45,212,191,.08); }
+.dp-sun { color:#fb923c; border-color:rgba(251,146,60,.4); background:rgba(251,146,60,.08); }
+
+/* PROGRESS */
+.progress-section {
+  margin-bottom:28px;
+}
+.progress-header {
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.progress-track {
+  height:4px;
+  background:var(--surface2);
+  border-radius:99px;
+  overflow:hidden;
+}
+.progress-fill {
+  height:100%;
+  background:linear-gradient(90deg, var(--purple), var(--teal));
+  border-radius:99px;
+  transition:width .4s;
+}
+
+/* TOAST */
+.toast {
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:10px 20px;
+  font-size:13px;
+  color:var(--text);
+  opacity:0;
+  transition:opacity .25s, transform .25s;
+  z-index:100;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show {
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* FOOTER */
+footer {
+  margin-top:48px;
+  padding-top:20px;
+  border-top:1px solid var(--border);
+  text-align:center;
+  font-size:12px;
+  color:var(--dim);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation:fadeUp .3s ease both; }
+
+@keyframes pulse-dot {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.4); }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">🎮</div>
+        <div>
+          <div class="brand-name">Zona Playbox</div>
+          <div class="brand-sub">Votação do fim de semana</div>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="hstat">
+          <div class="hstat-num" id="hs-total">19</div>
+          <div class="hstat-lbl">jogadores</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num" id="hs-voted">0</div>
+          <div class="hstat-lbl">votaram</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num" id="hs-week">1/18</div>
+          <div class="hstat-lbl">semana</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NICK -->
+  <div class="nick-section">
+    <span class="nick-label">👤 Identifique-se:</span>
+    <div id="nick-form-area" class="nick-form">
+      <input type="text" id="nick-input" placeholder="Seu apelido no grupo..." maxlength="20"/>
+      <button class="btn" onclick="setNick()">Entrar</button>
+    </div>
+    <div id="nick-active-area" class="nick-active" style="display:none">
+      <div class="nick-avatar" id="nick-avatar">?</div>
+      <span class="nick-name-display" id="nick-name-display">—</span>
+      <button class="btn btn-ghost" onclick="clearNick()">Trocar</button>
+    </div>
+  </div>
+
+  <!-- WEEK NAV -->
+  <div class="week-nav">
+    <button class="nav-btn" id="btn-prev" onclick="changeWeek(-1)">&#8592;</button>
+    <div class="week-info">
+      <div class="week-title" id="week-title">Semana 1</div>
+      <div class="week-dates" id="week-dates">—</div>
+    </div>
+    <div class="week-dots" id="week-dots"></div>
+    <button class="nav-btn" id="btn-next" onclick="changeWeek(1)">&#8594;</button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span id="prog-label">0 de 19 votaram esta semana</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="schedule-bar">
+    <span class="schedule-bar-label">Horários:</span>
+    <span class="day-pill dp-fri">Sexta 20h</span>
+    <span class="day-pill dp-sat">Sábado 16h</span>
+    <span class="day-pill dp-sun">Domingo 15h</span>
+  </div>
+
+  <!-- RESULT BANNER -->
+  <div class="result-banner" id="result-banner"></div>
+
+  <!-- VOTE CARDS -->
+  <div class="vote-grid" id="vote-grid"></div>
+
+  <footer>
+    Zona Playbox · 19 jogadores · Calendário 2025
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TOTAL = 19;
+
+const weeks = [
+  {num:1,dates:"6–8 jun 2025",
+   main:{name:"Delta Force",price:"Grátis",cross:true,cat:"FPS Tático",desc:"Crossplay ativo — cabe os 19 juntos no mesmo servidor."},
+   alt:{name:"CS 1.6",price:"Grátis",cross:false,cat:"FPS Clássico",desc:"O clássico imortal. Roda em qualquer máquina, sem desculpas."}},
+  {num:2,dates:"13–15 jun 2025",
+   main:{name:"Crab Game",price:"Grátis",cross:false,cat:"Party Game",desc:"Até 50 jogadores, caos garantido. Perfeito para o grupo grande."},
+   alt:{name:"Team Fortress 2",price:"Grátis",cross:false,cat:"FPS Hero",desc:"Classes variadas, jogabilidade caótica e sempre divertida."}},
+  {num:3,dates:"20–22 jun 2025",
+   main:{name:"Warzone",price:"Grátis",cross:true,cat:"Battle Royale",desc:"Crossplay com squads de 4 — vários grupos simultâneos."},
+   alt:{name:"Trackmania",price:"Grátis",cross:true,cat:"Corrida",desc:"Corrida arcade com crossplay. Desafios rápidos entre amigos."}},
+  {num:4,dates:"27–29 jun 2025",
+   main:{name:"GTA San Andreas",price:"Grátis",cross:false,cat:"Open World",desc:"Modo multiplayer via SAMP/FiveM. Caos em mundo aberto."},
+   alt:{name:"Delta Force",price:"Grátis",cross:true,cat:"FPS Tático",desc:"Repetição para quem perdeu o primeiro final de semana."}},
+  {num:5,dates:"4–6 jul 2025",
+   main:{name:"Left 4 Dead 2",price:"R$ 33",cross:false,cat:"Coop Horde",desc:"Co-op em campanhas ou versus. Clássico do gênero, sempre épico."},
+   alt:{name:"Team Fortress 2",price:"Grátis",cross:false,cat:"FPS Hero",desc:"Grátis para quem ainda não tem L4D2."}},
+  {num:6,dates:"11–13 jul 2025",
+   main:{name:"Battlefield 4",price:"R$ 10",cross:false,cat:"FPS Militar",desc:"Até 64 jogadores em servidores comunitários. Destruição total."},
+   alt:{name:"Crab Game",price:"Grátis",cross:false,cat:"Party Game",desc:"Leve e grátis para quem não comprou BF4."}},
+  {num:7,dates:"18–20 jul 2025",
+   main:{name:"Among Us",price:"R$ 15",cross:true,cat:"Social Dedução",desc:"Crossplay, até 15 jogadores — quase o grupo todo na mesma partida."},
+   alt:{name:"CS 1.6",price:"Grátis",cross:false,cat:"FPS Clássico",desc:"Para quem prefere atirar ao invés de encontrar impostores."}},
+  {num:8,dates:"25–27 jul 2025",
+   main:{name:"Left 4 Dead 1",price:"R$ 33",cross:false,cat:"Coop Horde",desc:"A campanha original. Atmosfera mais sombria que a do 2."},
+   alt:{name:"Battlefield 4",price:"R$ 10",cross:false,cat:"FPS Militar",desc:"Tanques e caos para quem já tem BF4."}},
+  {num:9,dates:"1–3 ago 2025",
+   main:{name:"Killing Floor 2",price:"R$ 56",cross:false,cat:"Coop Horde",desc:"Horde cooperativo de zumbis. Até 6 por rodada, intenso."},
+   alt:{name:"Warzone",price:"Grátis",cross:true,cat:"Battle Royale",desc:"Grátis para quem ainda não tem KF2."}},
+  {num:10,dates:"8–10 ago 2025",
+   main:{name:"HumanitZ",price:"R$ 58",cross:false,cat:"Sobrevivência",desc:"Sobrevivência cooperativa em mundo aberto pós-apocalíptico."},
+   alt:{name:"Crab Game",price:"Grátis",cross:false,cat:"Party Game",desc:"Animação leve enquanto pesam a compra do HumanitZ."}},
+  {num:11,dates:"15–17 ago 2025",
+   main:{name:"Chivalry 2",price:"R$ 75",cross:true,cat:"Ação Medieval",desc:"Crossplay, até 64 jogadores em batalhas medievais caóticas."},
+   alt:{name:"Killing Floor 2",price:"R$ 56",cross:false,cat:"Coop Horde",desc:"Para quem já tem KF2 e não quer Chivalry."}},
+  {num:12,dates:"22–24 ago 2025",
+   main:{name:"Wreckfest",price:"R$ 83",cross:true,cat:"Corrida Destruição",desc:"Crossplay, corrida de demolição. Derby de destruição em grupo."},
+   alt:{name:"Trackmania",price:"Grátis",cross:true,cat:"Corrida",desc:"Corrida leve e grátis para quem não tem Wreckfest."}},
+  {num:13,dates:"29–31 ago 2025",
+   main:{name:"Insurgency: Sandstorm",price:"R$ 100",cross:true,cat:"FPS Tático",desc:"Crossplay, tático e cooperativo. Realismo no nível certo."},
+   alt:{name:"Chivalry 2",price:"R$ 75",cross:true,cat:"Ação Medieval",desc:"Para quem ainda não tem Sandstorm, mas já tem Chivalry."}},
+  {num:14,dates:"5–7 set 2025",
+   main:{name:"Arma 3",price:"R$ 100",cross:false,cat:"Milsim",desc:"Simulador militar profundo. Sessão longa e épica garantida."},
+   alt:{name:"Insurgency: Sandstorm",price:"R$ 100",cross:true,cat:"FPS Tático",desc:"Mais rápido e acessível que Arma, mas igualmente intenso."}},
+  {num:15,dates:"12–14 set 2025",
+   main:{name:"Minecraft",price:"~R$ 120",cross:true,cat:"Sandbox",desc:"Servidor do grupo. Constroem durante o fds todo — projeto coletivo."},
+   alt:{name:"HumanitZ",price:"R$ 58",cross:false,cat:"Sobrevivência",desc:"Para quem não curte blocos mas quer cooperação."}},
+  {num:16,dates:"19–21 set 2025",
+   main:{name:"The Crew 2 / Motorfest",price:"R$ 105",cross:true,cat:"Corrida Aberta",desc:"Crossplay, mundo aberto de corridas com muitos jogadores."},
+   alt:{name:"Wreckfest",price:"R$ 83",cross:true,cat:"Corrida Destruição",desc:"Destruição de carros para quem já tem Wreckfest."}},
+  {num:17,dates:"26–28 set 2025",
+   main:{name:"Hell Let Loose",price:"R$ 170",cross:false,cat:"FPS WWII",desc:"100 jogadores por partida — o grupo inteiro na mesma guerra."},
+   alt:{name:"Battlefield 4",price:"R$ 10",cross:false,cat:"FPS Militar",desc:"Para quem ainda não comprou Hell Let Loose."}},
+  {num:18,dates:"3–5 out 2025",
+   main:{name:"Forza Horizon 5",price:"R$ 250",cross:true,cat:"Corrida AAA",desc:"Crossplay — o grupo inteiro explorando o México virtual."},
+   alt:{name:"The Crew 2 / Motorfest",price:"R$ 105",cross:true,cat:"Corrida Aberta",desc:"Para quem não tem FH5 ainda, mas quer correr junto."}}
+];
+
+// Persist votes in localStorage
+function loadStore() {
+  try { return JSON.parse(localStorage.getItem('zpb_votes') || 'null') || buildStore(); }
+  catch(e) { return buildStore(); }
+}
+function buildStore() {
+  const s = {};
+  weeks.forEach((_,i) => { s[i] = {main:[], alt:[]}; });
+  return s;
+}
+function saveStore() {
+  localStorage.setItem('zpb_votes', JSON.stringify(store));
+}
+
+let store = loadStore();
+let currentWeek = 0;
+let nick = localStorage.getItem('zpb_nick') || '';
+
+function initDots() {
+  const c = document.getElementById('week-dots');
+  c.innerHTML = '';
+  weeks.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.title = `Semana ${i+1}`;
+    d.onclick = () => { currentWeek = i; render(); };
+    c.appendChild(d);
+  });
+}
+
+function updateDots() {
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((d, i) => {
+    const total = store[i].main.length + store[i].alt.length;
+    d.className = 'dot' + (i === currentWeek ? ' active' : total > 0 ? ' has-votes' : '');
+  });
+}
+
+function priceBadge(price) {
+  const val = parseInt(price.replace(/\D/g,''));
+  if (price === 'Grátis') return `<span class="tag tag-free">Grátis</span>`;
+  if (val > 100) return `<span class="tag tag-expensive">${price}</span>`;
+  return `<span class="tag tag-paid">${price}</span>`;
+}
+
+function hasVoted(wi) {
+  return nick && (store[wi].main.includes(nick) || store[wi].alt.includes(nick));
+}
+function myVote(wi) {
+  if (store[wi].main.includes(nick)) return 'main';
+  if (store[wi].alt.includes(nick)) return 'alt';
+  return null;
+}
+
+function vote(wi, side) {
+  if (!nick) { showToast('⚠️ Coloca seu apelido antes de votar!'); return; }
+  if (hasVoted(wi)) { showToast('Você já votou nesta semana!'); return; }
+  store[wi][side].push(nick);
+  saveStore();
+  render();
+  showToast(side === 'main' ? '✅ Voto no jogo principal registrado!' : '✅ Voto no alternativo registrado!');
+}
+
+function pct(a, b) { const t = a+b; return t === 0 ? 0 : Math.round(a/t*100); }
+
+function chipsHtml(arr, side) {
+  if (!arr.length) return '<span class="no-votes-txt">nenhum voto ainda</span>';
+  return arr.map(n => {
+    const isMe = n === nick;
+    const cls = isMe ? (side === 'main' ? 'chip chip-me' : 'chip chip-me-teal') : 'chip';
+    return `<span class="${cls}">${n}${isMe ? ' (eu)' : ''}</span>`;
+  }).join('');
+}
+
+function render() {
+  const wi = currentWeek;
+  const w = weeks[wi];
+  const mv = store[wi].main.length;
+  const av = store[wi].alt.length;
+  const total = mv + av;
+  const voted = hasVoted(wi);
+  const myvote = myVote(wi);
+  const mpct = pct(mv, av);
+  const apct = pct(av, mv);
+
+  // header
+  document.getElementById('week-title').textContent = `Semana ${w.num}`;
+  document.getElementById('week-dates').textContent = w.dates;
+  document.getElementById('hs-voted').textContent = total;
+  document.getElementById('hs-week').textContent = `${wi+1}/18`;
+
+  // progress
+  const progPct = Math.round(total/TOTAL*100);
+  document.getElementById('prog-label').textContent = `${total} de ${TOTAL} votaram esta semana`;
+  document.getElementById('prog-pct').textContent = `${progPct}%`;
+  document.getElementById('prog-fill').style.width = progPct + '%';
+
+  // nav buttons
+  document.getElementById('btn-prev').disabled = wi === 0;
+  document.getElementById('btn-next').disabled = wi === weeks.length - 1;
+
+  updateDots();
+
+  // result banner
+  const rb = document.getElementById('result-banner');
+  if (total === 0) {
+    rb.className = 'result-banner';
+    rb.innerHTML = '';
+  } else if (mv > av) {
+    rb.className = 'result-banner visible rb-main';
+    rb.innerHTML = `🏆 <strong>${w.main.name}</strong> na frente com ${mv} voto${mv!==1?'s':''}!`;
+  } else if (av > mv) {
+    rb.className = 'result-banner visible rb-alt';
+    rb.innerHTML = `🏆 <strong>${w.alt.name}</strong> na frente com ${av} voto${av!==1?'s':''}!`;
+  } else {
+    rb.className = 'result-banner visible rb-tie';
+    rb.innerHTML = `⚖️ Empate! ${mv} voto${mv!==1?'s':''} cada — precisa de mais votos.`;
+  }
+
+  // cards
+  const canVote = nick && !voted;
+  const grid = document.getElementById('vote-grid');
+  grid.innerHTML = '';
+  grid.classList.add('fade-up');
+  setTimeout(() => grid.classList.remove('fade-up'), 400);
+
+  ['main','alt'].forEach(side => {
+    const g = side === 'main' ? w.main : w.alt;
+    const votes = store[wi][side].length;
+    const barPct = side === 'main' ? mpct : apct;
+    const isSelected = myvote === side;
+    const card = document.createElement('div');
+    card.className = `vote-card ${side}-card${isSelected ? ` selected-${side}` : ''}${voted ? ' no-hover' : ''}`;
+    if (canVote) card.onclick = () => vote(wi, side);
+
+    let btnHtml = '';
+    if (canVote) {
+      btnHtml = `<button class="vote-action va-${side}" onclick="event.stopPropagation();vote(${wi},'${side}')">
+        ${side === 'main' ? '🎯' : '🎲'} Votar neste
+      </button>`;
+    } else if (voted) {
+      if (isSelected) {
+        btnHtml = `<button class="vote-action va-done-${side}" disabled>✔ Seu voto</button>`;
+      }
+    }
+
+    card.innerHTML = `
+      <div class="card-role role-${side}">
+        ${side === 'main' ? '🎯 Principal' : '🎲 Alternativo'}
+      </div>
+      <div class="card-game-name">${g.name}</div>
+      <div class="card-tags">
+        ${priceBadge(g.price)}
+        ${g.cross ? '<span class="tag tag-cross">Crossplay</span>' : ''}
+        <span class="tag tag-cat">${g.cat}</span>
+      </div>
+      <div class="card-desc">${g.desc}</div>
+      <div class="bar-section">
+        <div class="bar-meta">
+          <span><strong>${votes}</strong> voto${votes!==1?'s':''}</span>
+          <span>${barPct}%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill bar-fill-${side}" style="width:${barPct}%"></div>
+        </div>
+      </div>
+      ${btnHtml}
+      <div class="voters-label">Quem votou</div>
+      <div class="voter-chips">${chipsHtml(store[wi][side], side)}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function setNick() {
+  const v = document.getElementById('nick-input').value.trim();
+  if (!v) return;
+  nick = v;
+  localStorage.setItem('zpb_nick', nick);
+  renderNick();
+  render();
+  showToast(`Bem-vindo, ${nick}! 👋`);
+}
+
+function clearNick() {
+  nick = '';
+  localStorage.removeItem('zpb_nick');
+  document.getElementById('nick-form-area').style.display = 'flex';
+  document.getElementById('nick-active-area').style.display = 'none';
+  document.getElementById('nick-input').value = '';
+  render();
+}
+
+function renderNick() {
+  if (nick) {
+    document.getElementById('nick-form-area').style.display = 'none';
+    document.getElementById('nick-active-area').style.display = 'flex';
+    document.getElementById('nick-name-display').textContent = nick;
+    document.getElementById('nick-avatar').textContent = nick.charAt(0).toUpperCase();
+  } else {
+    document.getElementById('nick-form-area').style.display = 'flex';
+    document.getElementById('nick-active-area').style.display = 'none';
+  }
+}
+
+function changeWeek(d) {
+  currentWeek = Math.max(0, Math.min(weeks.length-1, currentWeek+d));
+  render();
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+document.getElementById('nick-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') setNick();
+});
+
+// Init
+initDots();
+if (nick) renderNick();
+render();
+</script>
+</body>
+</html>
